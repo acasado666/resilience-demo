@@ -1,0 +1,81 @@
+## Api related configurations
+api:
+  info:
+    title: Resilience Demo API
+    description: Resilience4j  implementation.
+    version: 1.0.0
+    terms-of-service: https://www.ippen-digital-media.de/impressum/
+    contact:
+      name: BI Team
+      email: antonio.casado@ippen-digital.de
+      url: https://www.ippen-digital-media.de/
+    license:
+      name: Apache 2.0
+      url: http://www.apache.org/licenses/LICENSE-2.0.html
+  logging:
+    enable: true
+    url-patterns: "/*"
+    requestIdParamName: CORRELATION_ID
+
+## Api Doc related configurations
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /   # Redirect localhost:8080 to swagger-ui.html
+
+## Database related configurations
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      show-sql: true
+  h2:
+    console:
+      enabled:  true
+
+# Resilience configurations
+resilience4j:
+  bulkhead:
+    instances:
+      userService:
+        maxWaitDuration: 100ms
+        maxConcurrentCalls: 5
+  ratelimiter:
+    instances:
+      userService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 2s
+        timeoutDuration: 2s
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 100
+  circuitbreaker:
+    instances:
+      userService:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        waitDurationInOpenState: 5s
+        slidingWindowType: COUNT_BASED
+  retry:
+    instances:
+      tgServiceRetry:
+        waitDuration: 2000
+        maxRetryAttempts: 3
+      serviceRetry:
+        waitDuration: 3333
+        maxRetryAttempts: 4
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  endpoint:
+    health:
+      show-details: always
