@@ -1,4 +1,4 @@
-package com.resilience.resiliencedemo;
+package com.resilience.resiliencedemo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.resilience.resiliencedemo.controller.UserController;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -39,6 +40,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private RestTemplate restTemplate;
 
     @Captor
     private ArgumentCaptor<UserRequest> userRequestArgumentCaptor;

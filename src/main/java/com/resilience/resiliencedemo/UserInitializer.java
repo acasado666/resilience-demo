@@ -35,15 +35,13 @@ public class UserInitializer implements CommandLineRunner {
 
         userRepository.save(user1);
 
-        log.info("... finished book initialization");
-//
-//        User user2 = new User();
-//        user2.setId(3L);
-//        user2.setNickName("always-cold");
-//        user2.setName("Antonio");
-//        user2.setLastName("Casado");
-//
-//        userRepository.save(user2);
+        User user2 = new User();
+        user2.setId(3L);
+        user2.setNickName("always-cold");
+        user2.setName("Antonio");
+        user2.setLastName("Casado");
+
+        userRepository.save(user2);
 
     }
 }

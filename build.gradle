@@ -30,7 +30,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springdoc:springdoc-openapi-ui:1.5.8'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
     implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot2', version: '1.7.0'
 
     compileOnly 'org.projectlombok:lombok'
