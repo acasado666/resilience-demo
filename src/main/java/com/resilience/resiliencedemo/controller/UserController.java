@@ -2,8 +2,6 @@ package com.resilience.resiliencedemo.controller;
 
 import com.resilience.resiliencedemo.model.User;
 import com.resilience.resiliencedemo.service.UserService;
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
-import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 @RestController
@@ -40,15 +39,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @Bulkhead(name = "userService", fallbackMethod = "userBulkHeadFallback")
-    @RateLimiter(name = "userService", fallbackMethod = "userRateLimiterFallback")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping("/cache/{id}")
     public User getUserByIdCache(@PathVariable("id") Long id) {
-        return userService.getUserById(id);
+        return userService.getUserByIdCache(id);
     }
 
     @PutMapping("/{id}")
@@ -62,13 +59,28 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    public User userBulkHeadFallback(Throwable t) {
-        User user = new User();
-        return user;
+    @GetMapping("/retry/{id}")
+    public ResponseEntity<User> serviceRetry(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(userService.externalServiceRetry(id));
     }
 
-    public User userRateLimiterFallback(Throwable t) {
-        User user = new User();
-        return user;
+    @GetMapping("/circuitbreaker/{id}")
+    public ResponseEntity<User> serviceCircuitBreaker(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(userService.externalServiceCircuitBreaker(id));
+    }
+
+    @GetMapping("/ratelimiter")
+    public String serviceRateLimiter() {
+        return userService.ratelimiter();
+    }
+
+    @GetMapping("/timelimiter")
+    public CompletableFuture<String> futureSuccess(){
+        return userService.futureSuccess();
+    }
+
+    @GetMapping("/bulkhead")
+    public User externalServiceBulkhead() {
+        return userService.externalServiceBulkhead();
     }
 }
